@@ -67,9 +67,13 @@ test(function () { // AnnotatedClass1
 
 	Assert::same([], AnnotationsParser::getAll($rc->getMethod('f')));
 
-	Assert::same([
-		'return' => ['g'],
-	], AnnotationsParser::getAll($rc->getMethod('g')), 'g()');
+	if (PHP_VERSION_ID >= 80100) {
+		Assert::same([], AnnotationsParser::getAll($rc->getMethod('g')), 'g()');
+	} else {
+		Assert::same([
+			'return' => ['g'],
+		], AnnotationsParser::getAll($rc->getMethod('g')), 'g()');
+	}
 });
 
 

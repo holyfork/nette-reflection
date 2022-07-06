@@ -16,12 +16,12 @@ function check($name, $args)
 	$method = new Reflection\Method($name);
 	foreach ($method->getParameters() as $param) {
 		echo "$name(\${$param->getName()})\n";
-		list($isOptional, $isDefaultValueAvailable, $defaultValue) = array_shift($args) + [null, null, null];
-		Assert::same($isOptional, $param->isOptional());
-		Assert::same($isDefaultValueAvailable, $param->isDefaultValueAvailable());
+		[$isOptional, $isDefaultValueAvailable, $defaultValue] = array_shift($args) + [null, null, null];
+		Assert::same($isOptional, $param->isOptional(), 'optional');
+		Assert::same($isDefaultValueAvailable, $param->isDefaultValueAvailable(), 'default available');
 
 		if ($isDefaultValueAvailable) {
-			Assert::same($defaultValue, $param->getDefaultValue());
+			Assert::same($defaultValue, $param->getDefaultValue(), 'default value');
 		}
 	}
 }
@@ -32,7 +32,7 @@ class Test
 	public function func1($a, $b, $c)
 	{
 	}
-	public function func2($a, $b = null, $c)
+	public function func2($a, $b, $c = null)
 	{
 	}
 	public function func3($a, $b = null, $c = null)
@@ -60,42 +60,58 @@ check('Test::func1', [
 ]);
 check('Test::func2', [
 	/* $a */ [false, false],
-	/* $b */ [false, true],
-	/* $c */ [false, false],
+	/* $b */ [false, false],
+	/* $c */ [true, true],
 ]);
 check('Test::func3', [
 	/* $a */ [false, false],
 	/* $b */ [true, true, null],
 	/* $c */ [true, true, null],
 ]);
-check('Test::func4', [
-	/* $a */ [false, false],
-	/* $b */ [false, true],
-	/* $c */ [false, false],
-]);
+if (PHP_VERSION_ID >= 80100) {
+	check('Test::func4', [
+		/* $a */ [false, false],
+		/* $b */ [false, false],
+		/* $c */ [false, false],
+	]);
+} else {
+	check('Test::func4', [
+		/* $a */ [false, false],
+		/* $b */ [false, true],
+		/* $c */ [false, false],
+	]);
+}
 check('Test::func5', [
 	/* $a */ [false, false],
 	/* $b */ [true, true, null],
 	/* $c */ [true, true, null],
 ]);
-check('Test::func6', [
-	/* $a */ [false, false],
-	/* $b */ [false, true],
-	/* $c */ [false, false],
-]);
+if (PHP_VERSION_ID >= 80100) {
+	check('Test::func6', [
+		/* $a */ [false, false],
+		/* $b */ [false, false],
+		/* $c */ [false, false],
+	]);
+} else {
+	check('Test::func6', [
+		/* $a */ [false, false],
+		/* $b */ [false, true],
+		/* $c */ [false, false],
+	]);
+}
 check('Test::func7', [
 	/* $a */ [false, false],
 	/* $b */ [true, true, null],
 	/* $c */ [true, true, null],
 ]);
 check('Exception::__construct', [
-	/* $message */ [true, false],
-	/* $code */ [true, false],
-	/* $previous */ [true, false],
+	/* $message */ [true, true, ''],
+	/* $code */ [true, true, 0],
+	/* $previous */ [true, true],
 ]);
 check('FilesystemIterator::__construct', [
 	/* $path */ [false, false],
-	/* $flags */ [true, false],
+	/* $flags */ [true, true, 4096],
 ]);
 /*
 check('PDO::__construct', [
