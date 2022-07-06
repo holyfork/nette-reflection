@@ -26,6 +26,11 @@ class Extension extends \ReflectionExtension
 	/********************* Reflection layer ****************d*g**/
 
 
+	/**
+	 * @return ClassType
+	 * @throws \ReflectionException
+	 */
+	#[\ReturnTypeWillChange]
 	public function getClasses()
 	{
 		$res = [];
@@ -35,7 +40,11 @@ class Extension extends \ReflectionExtension
 		return $res;
 	}
 
-
+	/**
+	 * @return GlobalFunction[]
+	 * @throws \ReflectionException
+	 */
+	#[\ReturnTypeWillChange]
 	public function getFunctions()
 	{
 		foreach ($res = parent::getFunctions() as $key => $val) {
@@ -43,4 +52,5 @@ class Extension extends \ReflectionExtension
 		}
 		return $res;
 	}
+
 }

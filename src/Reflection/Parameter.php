@@ -41,9 +41,10 @@ class Parameter extends \ReflectionParameter
 	/**
 	 * @return ClassType
 	 */
+	#[\ReturnTypeWillChange]
 	public function getClass()
 	{
-		return ($ref = parent::getClass()) ? new ClassType($ref->getName()) : null;
+		return ($ref = parent::getType()) ? new ClassType($ref->getName()) : null;
 	}
 
 
@@ -53,7 +54,7 @@ class Parameter extends \ReflectionParameter
 	public function getClassName()
 	{
 		try {
-			return ($ref = parent::getClass()) ? $ref->getName() : null;
+			return ($ref = parent::getType()) ? $ref->getName() : null;
 		} catch (\ReflectionException $e) {
 			if (preg_match('#Class (.+) does not exist#', $e->getMessage(), $m)) {
 				return $m[1];
@@ -66,6 +67,7 @@ class Parameter extends \ReflectionParameter
 	/**
 	 * @return ClassType
 	 */
+	#[\ReturnTypeWillChange]
 	public function getDeclaringClass()
 	{
 		return ($ref = parent::getDeclaringClass()) ? new ClassType($ref->getName()) : null;
@@ -75,6 +77,7 @@ class Parameter extends \ReflectionParameter
 	/**
 	 * @return Method|GlobalFunction
 	 */
+	#[\ReturnTypeWillChange]
 	public function getDeclaringFunction()
 	{
 		return is_array($this->function)

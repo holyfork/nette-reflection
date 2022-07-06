@@ -77,6 +77,7 @@ class ClassType extends \ReflectionClass
 	/**
 	 * @return Method|null
 	 */
+	#[\ReturnTypeWillChange]
 	public function getConstructor()
 	{
 		return ($ref = parent::getConstructor()) ? Method::from($this->getName(), $ref->getName()) : null;
@@ -86,6 +87,7 @@ class ClassType extends \ReflectionClass
 	/**
 	 * @return Extension|null
 	 */
+	#[\ReturnTypeWillChange]
 	public function getExtension()
 	{
 		return ($name = $this->getExtensionName()) ? new Extension($name) : null;
@@ -95,6 +97,7 @@ class ClassType extends \ReflectionClass
 	/**
 	 * @return static[]
 	 */
+	#[\ReturnTypeWillChange]
 	public function getInterfaces()
 	{
 		$res = [];
@@ -108,6 +111,7 @@ class ClassType extends \ReflectionClass
 	/**
 	 * @return Method
 	 */
+	#[\ReturnTypeWillChange]
 	public function getMethod($name)
 	{
 		return new Method($this->getName(), $name);
@@ -117,6 +121,7 @@ class ClassType extends \ReflectionClass
 	/**
 	 * @return Method[]
 	 */
+	#[\ReturnTypeWillChange]
 	public function getMethods($filter = -1)
 	{
 		foreach ($res = parent::getMethods($filter) as $key => $val) {
@@ -129,6 +134,7 @@ class ClassType extends \ReflectionClass
 	/**
 	 * @return static|null
 	 */
+	#[\ReturnTypeWillChange]
 	public function getParentClass()
 	{
 		return ($ref = parent::getParentClass()) ? new static($ref->getName()) : null;
@@ -138,6 +144,7 @@ class ClassType extends \ReflectionClass
 	/**
 	 * @return Property[]
 	 */
+	#[\ReturnTypeWillChange]
 	public function getProperties($filter = -1)
 	{
 		foreach ($res = parent::getProperties($filter) as $key => $val) {
@@ -150,6 +157,7 @@ class ClassType extends \ReflectionClass
 	/**
 	 * @return Property
 	 */
+	#[\ReturnTypeWillChange]
 	public function getProperty($name)
 	{
 		return new Property($this->getName(), $name);

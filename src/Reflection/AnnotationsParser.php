@@ -283,7 +283,7 @@ class AnnotationsParser
 					break;
 
 				case T_NAMESPACE:
-					$namespace = ltrim(self::fetch($tokens, [T_STRING, T_NS_SEPARATOR]) . '\\', '\\');
+					$namespace = ltrim(self::fetch($tokens, [T_STRING, T_NS_SEPARATOR, T_NAME_FULLY_QUALIFIED, T_NAME_QUALIFIED]) . '\\', '\\');
 					$uses = [];
 					break;
 
@@ -320,7 +320,7 @@ class AnnotationsParser
 					break;
 
 				case T_USE:
-					while (!$class && ($name = self::fetch($tokens, [T_STRING, T_NS_SEPARATOR]))) {
+					while (!$class && ($name = self::fetch($tokens, [T_STRING, T_NS_SEPARATOR, T_NAME_FULLY_QUALIFIED, T_NAME_QUALIFIED]))) {
 						$name = ltrim($name, '\\');
 						if (self::fetch($tokens, '{')) {
 							while ($suffix = self::fetch($tokens, [T_STRING, T_NS_SEPARATOR])) {
@@ -336,7 +336,7 @@ class AnnotationsParser
 							}
 
 						} elseif (self::fetch($tokens, T_AS)) {
-							$uses[self::fetch($tokens, T_STRING)] = $name;
+							$uses[self::fetch($tokens, [T_STRING, T_NAME_FULLY_QUALIFIED, T_NAME_QUALIFIED])] = $name;
 
 						} else {
 							$tmp = explode('\\', $name);
